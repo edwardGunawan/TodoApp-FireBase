@@ -25,6 +25,7 @@ module.exports = {
     /* specify the folder that we want webpack to look at, so we don't need to specify alias every file that we create */
     modulesDirectories: [
       'node_modules',
+      './app/api',
       './app/components'
     ],
     alias: {
