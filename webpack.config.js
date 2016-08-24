@@ -22,8 +22,13 @@ module.exports = {
   },
   resolve: {
     root: __dirname,
+    /* specify the folder that we want webpack to look at, so we don't need to specify alias every file that we create */
+    modulesDirectories: [
+      'node_modules',
+      './app/components'
+    ],
     alias: {
-      applicationStyles: 'app/styles/app.scss'
+      applicationStyles: 'app/styles/app.scss',
     },
     extensions: ['', '.js', '.jsx']
   },
@@ -40,7 +45,7 @@ module.exports = {
     ]
   },
   sassLoader: {
-    includePaths:[ 
+    includePaths:[
       path.resolve(__dirname, './node_modules/foundation-sites/scss')
     ]
   },
