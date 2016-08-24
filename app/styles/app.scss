@@ -1,0 +1,11 @@
+// app.scss file is the root of our style, and it consist of a bunch of imports
+// import all the file from other file
+// we can leave off the extention and the _ when importing
+
+//foundation
+@import 'base/foundation-settings';
+@import 'foundation';
+@include foundation-everything;
+
+
+//components
