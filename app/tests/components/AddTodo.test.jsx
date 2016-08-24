@@ -12,6 +12,8 @@ describe('AddTodo', () => {
   });
 
   it('should call onAddTodo if valid text enter', () => {
+    /* create a variable first, and then create a spy and pass it into the component and see whether the
+    function really get called */
     var todoTextVariable = 'Clean the trash can';
     var spy = expect.createSpy();
     var addTodo = TestUtils.renderIntoDocument(<AddTodo onAddTodo = {spy}/>);

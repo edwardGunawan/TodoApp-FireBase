@@ -22,6 +22,9 @@ describe('TodoApp', () => {
   });
 
   it('should toggle completed value when handleToggle called', () => {
+
+    /* create a test data, and then pass the data in, like what the user is doing, so
+    do exactly as the flow of the app */
     var todoData = {
       id: 11,
       text: 'test Features',
@@ -30,8 +33,10 @@ describe('TodoApp', () => {
     var todoApp = TestUtils.renderIntoDocument(<TodoApp/>);
     todoApp.setState({todos: [todoData]});
 
+    /* check whether the completed in todoApp state is really false */
     expect(todoApp.state.todos[0].completed).toBe(false);
 
+    /* toggle it again, and check whether the todoApp really got toggled */
     todoApp.handleToggle(11);
     expect(todoApp.state.todos[0].completed).toBe(true);
 
