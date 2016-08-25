@@ -7,6 +7,9 @@ var TodoList = React.createClass({
   render: function() {
     var {todos} = this.props;
     var renderTodos = () => {
+      if(todos.length === 0){
+        return <p className="container__message"> Nothing To Do </p>
+      }
       /* generating multiple instances of the component need to create a key prop, use internally by react to keep
       track of the individual component */
       return todos.map((todo) => {

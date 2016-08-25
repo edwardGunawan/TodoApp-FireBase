@@ -11,7 +11,7 @@ var TodoSearch = React.createClass({
   },
   render: function() {
     return (
-      <div>
+      <div className="container__header">
         <div>
           <input type="search" ref="searchText" placeholder="Search todos" onChange={this.handleSearch}/> {/* so everytime when the user type something it will just trigger that event */}
         </div>

@@ -1,0 +1,30 @@
+.todo {
+  align-items: center;
+  cursor: pointer;
+  display: flex;
+  padding: 1rem;
+  transition: background .3s ease; // transition property between stage, gradually, background color, .3seconds, and ease means slowly
+
+  p,input {
+    margin: 0;
+  }
+
+  > :first-child {
+    margin-right: 1rem;
+  }
+
+  & :hover { // same as doing it outside of .todo:hover, it is a scss way to specify sudo selector inside the regular selector
+    background: #f0f0f0;
+  }
+}
+
+.todo__subtext {
+  color: #999; // nice gray
+}
+
+.todo-completed {
+  p, .todo-subtext {
+    color: $light-color;
+    text-decoration: line-through;
+  }
+}
