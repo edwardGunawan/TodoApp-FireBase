@@ -35,7 +35,8 @@ var TodoApp = React.createClass({
           id:uuid(), // generate random id, so you don't really need to have to keep track on id
           text:text,
           completed: false,
-          createdAt: moment().unix() // to wire up the timestamps for now
+          createdAt: moment().unix(), // to wire up the timestamps for now
+          completedAt: undefined
         }
       ]
     });

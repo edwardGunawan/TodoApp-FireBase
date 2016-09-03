@@ -1,3 +1,5 @@
+var uuid = require('node-uuid');
+var moment = require('moment');
 // handling set search text action, the state in reducers is like the real state in
 // react, if and when you return it you return it to the state, in what value on what the action has
 // cause you, so the reducers is like a handle stage thing
@@ -17,4 +19,35 @@ export var showCompletedReducer = (state= false, action) => {
     default:
       return state;
   }
+}
+
+// todo item for empty array
+export var todoReducer = (state=[], action) => {
+  switch(action.type){
+    case 'ADD_TODO':
+      return [
+        ...state,
+        {
+          id:uuid(),
+          text: action.text,
+          completed: false,
+          createdAt: moment().unix(),
+          completedAt: undefined
+        }
+      ];
+    case 'TOGGLE_TODO':
+      return state.map((todo) => {
+        var nextCompleted = !todo.completed;
+        if(todo.id === action.id){
+          return {
+            ...todo,
+            completed: nextCompleted,
+            completedAt: (nextCompleted)? moment().unix(): undefined
+          }
+        }
+      });
+    default:
+      return state;
+  }
+
 }
