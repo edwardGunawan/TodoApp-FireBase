@@ -31,7 +31,7 @@ export var Todo = React.createClass({ // this export is going to use it in the t
           <input type="checkbox" checked={completed}/>
         </div>
         <div>
-          <p>{text} </p>
+          <p>{text}</p>
           <p className="todo__subtext"> {renderDate()} </p>
         </div>
 

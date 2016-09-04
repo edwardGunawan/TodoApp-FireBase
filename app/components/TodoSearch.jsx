@@ -1,23 +1,26 @@
 var React = require('react');
-var PropTypes = React.PropTypes;
+var {connect} = require('react-redux');
+var actions = require('actions');
 
-var TodoSearch = React.createClass({
+export var TodoSearch = React.createClass({
 
-  handleSearch: function(){
-    var showCompleted = this.refs.showCompleted.checked;
-    var searchText = this.refs.searchText.value;
-
-    this.props.onSearch(showCompleted,searchText);
-  },
   render: function() {
+    var {dispatch, showCompleted, searchText} = this.props; // because you put showCompleted and searchText in the conenected
+
+// value in input, will prepopulate the searchText, can be set when application even start
     return (
       <div className="container__header">
         <div>
-          <input type="search" ref="searchText" placeholder="Search todos" onChange={this.handleSearch}/> {/* so everytime when the user type something it will just trigger that event */}
+          <input type="search" ref="searchText" placeholder="Search todos" value={searchText} onChange={() => {
+              var searchText = this.refs.searchText.value;
+              dispatch(actions.setSearchText(searchText));
+            }}/> {/* so everytime when the user type something it will just trigger that event */}
         </div>
         <div>
           <label>
-            <input type="checkbox" ref="showCompleted" onChange={this.handleSearch}/>
+            <input type="checkbox" ref="showCompleted" checked={showCompleted} onChange={() => {
+                dispatch(actions.toggleShowCompleted());
+              }}/>
             Show completed todos
           </label>
         </div>
@@ -26,5 +29,14 @@ var TodoSearch = React.createClass({
   }
 
 });
+// tell which value we want to grab from the state, but not just empty data that is pass to the component
+  // if there is no props that is passed from the parent funciton we can set the connect argument to this, so that there is a data that is passed to the component when connect to redux
+export default connect(
+  (state) => {
+    return {
+      showCompleted: state.showCompleted,
+      searchText: state.searchText
+    }
+  }
 
-module.exports = TodoSearch;
+)(TodoSearch);
