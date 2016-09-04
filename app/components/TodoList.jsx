@@ -1,8 +1,9 @@
 var React = require('react');
-var PropTypes = React.PropTypes;
-var Todo = require('Todo');
+var {connect} = require('react-redux');
+import Todo from 'Todo'; // access to the connected version, if ES destruction will access on the pure react version
 
-var TodoList = React.createClass({
+// just like todo, and by default we want to export the default component
+export var TodoList = React.createClass({
 
   render: function() {
     var {todos} = this.props;
@@ -14,7 +15,7 @@ var TodoList = React.createClass({
       track of the individual component */
       return todos.map((todo) => {
         return (
-          <Todo key={todo.id} onToggle={this.props.onToggle} {...todo}/>
+          <Todo key={todo.id} {...todo}/>
         );
       });
     }
@@ -27,4 +28,11 @@ var TodoList = React.createClass({
 
 });
 
-module.exports = TodoList;
+export default connect( // make a connection and to connect it to todoList
+  (state) => { // which pieces of state that the connect wanst to conenct to about, showCompleted, and id and everything
+    return {
+      // state.todo is an array of todo item, to connect redux store to individual component
+      todos: state.todos // todos is going to state the props in our component, and the todoList component will have an access to the whatever state todos property is
+    };
+  }
+)(TodoList); // do a connection and connect it ToDoList
