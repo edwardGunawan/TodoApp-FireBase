@@ -2,6 +2,7 @@ var redux = require('redux');
 var {searchTextReducer, showCompletedReducer, todoReducer} = require('reducers');
 
 export var configure = (initialState = {}) => {
+  // reducers for the state, pretty much like the state
   var reducers = redux.combineReducers({
     searchText: searchTextReducer,
     showCompleted: showCompletedReducer,

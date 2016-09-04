@@ -5,24 +5,10 @@ var moment = require('moment');
 import TodoList from 'TodoList'; // we don't import the connectedTodoList (for specifying connected), because the unconnected version is only going to use it in the todoList test file
 import AddTodo from 'AddTodo';
 import TodoSearch from 'TodoSearch';
-var TodoAPI = require('TodoAPI');
+
 
 var TodoApp = React.createClass({
-  getInitialState: function() {
-    return {
-      showCompleted: false,
-      searchText: '',
-      todos: TodoAPI.getTodos()
-    };
-  },
-  /* any time when we get changes from the state we set the todos */
-  componentDidUpdate: function(prevState) {
-    TodoAPI.setTodos(this.state.todos);
-  },
-
   render: function() {
-    var {todos, showCompleted, searchText} = this.state;
-    var filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchText);
     return (
       <div>
         <h1 className="page-title"> Todo App </h1>

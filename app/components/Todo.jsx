@@ -9,7 +9,7 @@ var PropTypes = React.PropTypes;
 export var Todo = React.createClass({ // this export is going to use it in the text file, raw react component
 
   render: function() {
-    var {text, id, completed, createdAt, completedAt,dispatch} = this.props;
+    var {text, id, completed, createdAt, completedAt, dispatch} = this.props;
     var todoClassName = completed ? 'todo todo-completed' : 'todo'; // add the css class to the completed todo and not completed yet
     var renderDate = () => {
       var message = 'Created ';
