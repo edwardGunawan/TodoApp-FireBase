@@ -9,16 +9,8 @@ var actions = require('actions');
 var store = require('configureStore').configure();
 var TodoAPI = require('TodoAPI');
 
-/* listen to changes on my store */
-store.subscribe(() => {
-  var state = store.getState();
-  console.log('New State', state);
-  TodoAPI.setTodos(state.todos); // store everything that is in the state of store to the TodoAPI setTodos function
-});
 
-var initialTodos = TodoAPI.getTodos(); // might or might not have todo item
-store.dispatch(actions.addTodos(initialTodos));
-
+store.dispatch(actions.startAddTodos()); //use async fetches data from firebase, and then it will call add todo which will updtae the redux store and rerender the app
 
 // Load foundation
 // after includePaths in webpack config for telling the sass loader to include the file, we don't need to have it

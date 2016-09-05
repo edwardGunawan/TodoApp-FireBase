@@ -8,13 +8,16 @@ export var TodoList = React.createClass({
 
   render: function() {
     var {todos, showCompleted, searchText} = this.props; // no props in the TodoApp that is pass down, but through redux we can pass inside the data to here
+
     var renderTodos = () => {
-      if(todos.length === 0){
-        return <p className="container__message"> Nothing To Do </p>
+      var filteredTodos = TodoAPI.filterTodos(todos,showCompleted,searchText);
+
+      if(filteredTodos.length === 0){
+        return  <p className="container__message"> Nothing To Do </p>
       }
       /* generating multiple instances of the component need to create a key prop, use internally by react to keep
       track of the individual component, but it only get the todos array which there is none searchText and showCompleted */
-      return TodoAPI.filterTodos(todos,showCompleted,searchText).map((todo) => {
+      return filteredTodos.map((todo) => {
         return (
           <Todo key={todo.id} {...todo}/>
         );

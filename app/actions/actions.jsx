@@ -44,6 +44,26 @@ export var addTodos = (todos) => {
     todos
   }
 }
+/* fetch the data from firebase */
+export var startAddTodos = () => {
+  return (dispatch, getState) => {
+    var todosRef = firebaseRef.child('todos');
+
+    return todosRef.once('value').then((snapshot) => {
+      // console.log('snapshot.val()' , snapshot.val()); // val() return the whole object representation of that data reference to, the key will be the key of that whole data array since it is referencing to the todos, it will be todos
+      var todos = snapshot.val() || {}; // get the value
+      var parseTodos = [];
+
+      Object.keys(todos).forEach((todoId) => { // it will return the key on that object array which is the id
+        parseTodos.push({
+          id: todoId,
+          ...todos[todoId]
+        });
+      });
+      dispatch(addTodos(parseTodos));
+    });
+  }
+};
 
   export var toggleShowCompleted = () => {
     return {

@@ -107,13 +107,16 @@ describe('Actions', () => {
 
    /* beforeEach is available inside mocha, it lets us defined the code to run before every test, we can use this code to set up test suite, means we be adding some data to firebase, it can take done function when its done because async code */
    beforeEach((done)=>{
-     testTodoRef = firebaseRef.child('todos').push();
-
-     testTodoRef.set({
-       text:'Something to do',
-       completed: false,
-       createdAt: 2323232323
-     }).then(() => done()); // means it calls on done so that the asyn is done
+     var todosRef = firebaseRef.child('todos');
+     todosRef.remove().then(()=>{
+       testTodoRef = firebaseRef.child('todos').push();
+       return testTodoRef.set({
+         text:'Something to do',
+         completed: false,
+         createdAt: 2323232323
+       });
+     }).then(() => done())
+     .catch(done); // means it calls on done so that the asyn is done
    });
 
    /* after the test, all item will ve removed */
@@ -122,11 +125,11 @@ describe('Actions', () => {
    });
 
    it('should toggle todo and dispatch UPDATE_TODO action', (done) =>{
-     const store = createMockStore();
+     const store = createMockStore({});
      const action = actions.startToggleTodo(testTodoRef.key, true); // get the value of startToggleTodo
 
      store.dispatch(action).then(()=>{
-       const mockActions = store.getActions();
+       const mockActions = store.getActions({});
 
        /* expect for the mockActions the action to be type UPDATE_TODO, and the id is the same as testTodoRef.key */
        expect(mockActions[0]).toInclude({
@@ -141,8 +144,21 @@ describe('Actions', () => {
 
        done();
      },done);
-
    });
 
+   it('should populate todos and dispatch ADD_TODOS' , (done) => {
+     const store = createMockStore({});
+     const action = actions.startAddTodos();
+
+       store.dispatch(action).then(()=>{ // going to firebase and fetching todos
+         const mockActions = store.getActions();
+
+         /* of all the actions that is pass into the MockStore, the 1st one which is addTodos, and it has a type and a todos array */
+         expect(mockActions[0].type).toEqual('ADD_TODOS');
+         expect(mockActions[0].todos.length).toEqual(1);
+         expect(mockActions[0].todos[0].text).toEqual('Something to do')
+         done();
+       },done);
+   });
  });
 });
