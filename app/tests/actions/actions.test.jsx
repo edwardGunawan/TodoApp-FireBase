@@ -2,6 +2,7 @@ import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 var expect = require('expect');
 
+import firebase, {firebaseRef} from 'app/firebase/';
 var actions = require('actions');
 
 var createMockStore = configureMockStore([thunk]); // can be use inside of these test, it will be a generator to generate as many distinct store as you like
@@ -90,14 +91,58 @@ describe('Actions', () => {
     expect(res).toEqual(action);
   });
 
-  it('should generate toggle show todo', ()=>{
-    var action ={
-      type: 'TOGGLE_TODO',
-      id: 2
-    };
+ it('should generate udpate todo action', () => {
+   var action = {
+     type: 'UPDATE_TODO',
+     id: '123',
+     updates: {completed: false}
+   };
+   var res = actions.updateTodo(action.id,action.updates);
 
-    var res = actions.toggleTodo(action.id);
+   expect(res).toEqual(action);
+ });
 
-    expect(res).toEqual(action);
-  });
+ describe('Tests with firebase todos', () => {
+   var testTodoRef;
+
+   /* beforeEach is available inside mocha, it lets us defined the code to run before every test, we can use this code to set up test suite, means we be adding some data to firebase, it can take done function when its done because async code */
+   beforeEach((done)=>{
+     testTodoRef = firebaseRef.child('todos').push();
+
+     testTodoRef.set({
+       text:'Something to do',
+       completed: false,
+       createdAt: 2323232323
+     }).then(() => done()); // means it calls on done so that the asyn is done
+   });
+
+   /* after the test, all item will ve removed */
+   afterEach((done)=>{
+     testTodoRef.remove().then(()=>done()); // to remove every item in database, so that it doesn't get overwhelm
+   });
+
+   it('should toggle todo and dispatch UPDATE_TODO action', (done) =>{
+     const store = createMockStore();
+     const action = actions.startToggleTodo(testTodoRef.key, true); // get the value of startToggleTodo
+
+     store.dispatch(action).then(()=>{
+       const mockActions = store.getActions();
+
+       /* expect for the mockActions the action to be type UPDATE_TODO, and the id is the same as testTodoRef.key */
+       expect(mockActions[0]).toInclude({
+         type: 'UPDATE_TODO',
+         id: testTodoRef.key
+       });
+       /* props inside mockActions to true */
+       expect(mockActions[0].updates).toInclude({
+         completed: true
+       });
+       expect(mockActions[0].updates.completedAt).toExist();
+
+       done();
+     },done);
+
+   });
+
+ });
 });

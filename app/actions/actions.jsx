@@ -37,6 +37,7 @@ export var startAddTodo = (text) => {
   };
 }
 
+
 export var addTodos = (todos) => {
   return {
     type: "ADD_TODOS",
@@ -49,10 +50,28 @@ export var addTodos = (todos) => {
       type: 'TOGGLE_SHOW_COMPLETED'
     };
   }
-
-  export var toggleTodo = (id) => {
+// it returns the updateTodo
+  export var updateTodo = (id,updates) => {
     return {
-      type: 'TOGGLE_TODO',
-      id
+      type: 'UPDATE_TODO',
+      id,
+      updates
+    };
+  }
+
+/* when toogle need to save it in the firebase */
+  export var startToggleTodo= (id, completed) => {
+    return (dispatch, getState) => {
+      var todoRef = firebaseRef.child(`todos/${id}`); // equal 'todos/' + id
+
+      /* set completedAt, if completed is true, we want to set completedAt, but if it is false, we want to delete it */
+      var updates = {
+        completed,
+        completedAt: completed ? moment().unix():null
+      }
+      // update firebase
+      return todoRef.update(updates).then(() => {
+        dispatch(updateTodo(id,updates)); // it returns an updates, in which it is completed and completedAt
+      });
     };
   }

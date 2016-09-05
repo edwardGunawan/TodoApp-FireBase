@@ -22,10 +22,11 @@ export var Todo = React.createClass({ // this export is going to use it in the t
 
       return message + moment.unix(timestamp).format('MMM Do YYYY @ h:mm a');
     }
+
     return (
       <div className={todoClassName} onClick={() => {
-          dispatch(actions.toggleTodo(id)); // dispatch is like doing a eventhandler
-          // this.props.onToggle(id);
+          dispatch(actions.startToggleTodo(id, !completed)); // dispatch is like doing a eventhandler
+          // everytime press will get update on our firebase--> dispatch on updateTodo --> get into todoReducer update the state
         }}>
         <div>
           <input type="checkbox" checked={completed}/>

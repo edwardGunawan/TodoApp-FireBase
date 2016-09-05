@@ -30,15 +30,13 @@ export var todoReducer = (state=[], action) => {
         ...state,
         action.todo
       ];
-    case 'TOGGLE_TODO':
+    case 'UPDATE_TODO':// the updateTodo got send here, and it loops through updating the completedAt and completed
       return state.map((todo) => {
-        var nextCompleted = !todo.completed;
         if(todo.id === action.id){
-          return {
+          return{
             ...todo,
-            completed: nextCompleted,
-            completedAt: (nextCompleted)? moment().unix(): undefined
-          }
+            ...action.updates // in action.updates everything on the second will override the first, and the old props will still be there but got renew, and if there is a new one then the new props will get push in
+          };
         } else {
           return todo;
         }
