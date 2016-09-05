@@ -1,5 +1,11 @@
+import configureMockStore from 'redux-mock-store';
+import thunk from 'redux-thunk';
 var expect = require('expect');
+
 var actions = require('actions');
+
+var createMockStore = configureMockStore([thunk]); // can be use inside of these test, it will be a generator to generate as many distinct store as you like
+
 
 describe('Actions', () => {
 
@@ -19,30 +25,52 @@ describe('Actions', () => {
   it('should generate add todo action', ()=> {
     var action ={
       type:'ADD_TODO',
-      text:'texting'
+      todo : {
+        id: 123,
+        text: 'something',
+        completedAt: false,
+        createdAt: 123
+      }
     };
 
-    var res = actions.addTodo(action.text);
+    var res = actions.addTodo(action.todo);
 
     expect(res).toEqual(action);
   });
 
+  it('should create todo and DISPATCH_ADDTODO', (done) => {
+    const store = createMockStore({}); // empty store
+    const todoText = 'my todo item';
+
+    /* once the action is complete then the action will show up inside the mockStory,
+    if it does than the property looks great and we call done () */
+    store.dispatch(actions.startAddTodo(todoText)).then(() => {
+      const actions = store.getActions(); // return an array of all actions that is on our mock store, in this case it is only 1 action
+      expect(actions[0]).toInclude({
+        type: 'ADD_TODO' // this is not going to fail if it doesn't match up perfectly as long as there is this type
+      }); // same as toEqual
+      expect(actions[0].todo).toInclude({ // in the property of actions[0] in todo props
+        text: todoText
+      });
+      done();
+    }).catch(done); // call it to the firebase
+  });
+
   it('should generate add todos action object', () => {
-    var todos =[
-      {
-        id: 123,
-        text: 'something',
-        completedAt: false,
-        createdAt: 123,
-        completedAt: undefined
-      }
-    ];
 
     // create action
     var action = {
-      type: "ADD_TODOS",
+      type: 'ADD_TODOS',
       todos
-    }
+    };
+
+    var todos = [{
+      id: '111',
+      text: 'anything',
+      completed: false,
+      completedAt: undefined,
+      createdAt: 33000
+    }];
 
     // put the actions addTodos function in action and pass it into action.todos
     var res = actions.addTodos(action.todos);

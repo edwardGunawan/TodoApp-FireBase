@@ -5,6 +5,7 @@ var TestUtils = require('react-addons-test-utils');
 var expect = require('expect');
 
 var {AddTodo} = require('AddTodo');
+import * as actions from 'actions'; // takes all the property all of our actions props put them into an object that we can access them for
 
 describe('AddTodo', () => {
   it('should exist', () => {
@@ -15,10 +16,7 @@ describe('AddTodo', () => {
     /* create a variable first, and then create a spy and pass it into the component and see whether the
     function really get called */
     var todoTextVariable = 'Clean the trash can';
-    var action = {
-      type: "ADD_TODO",
-      text: todoTextVariable
-    }
+    var action = actions.startAddTodo(todoTextVariable);
     var spy = expect.createSpy();
     var addTodo = TestUtils.renderIntoDocument(<AddTodo dispatch = {spy}/>);
     var $el = $(ReactDOM.findDOMNode(addTodo));

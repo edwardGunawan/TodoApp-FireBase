@@ -23,17 +23,12 @@ export var showCompletedReducer = (state= false, action) => {
 
 // todo item for empty array
 export var todoReducer = (state=[], action) => {
+  // so the action will add todo from the firebase in action.todo in ADD_TODO
   switch(action.type){
     case 'ADD_TODO':
       return [
         ...state,
-        {
-          id:uuid(),
-          text: action.text,
-          completed: false,
-          createdAt: moment().unix(),
-          completedAt: undefined
-        }
+        action.todo
       ];
     case 'TOGGLE_TODO':
       return state.map((todo) => {
