@@ -1,11 +1,11 @@
-var $ = require('jQuery');
+// var $ = require('jQuery');
 /* to set and get item from the local storange
   pulling it out to a separate file, we can switch what data source we want to use it,
   so we won't have to make changes on the todo app
 */
 
 module.exports= {
-  
+
 
   filterTodos: function(todos, showCompleted, searchText){
     var filteredTodos = todos;
