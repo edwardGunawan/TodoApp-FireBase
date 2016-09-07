@@ -1,5 +1,8 @@
 var webpack = require('webpack');
 var path= require('path');
+// webpack NODE_ENV=production webpack -p to do more optimization
+// webpack config is exactly the same no matter what environment you running at, if you run in heroku, or the test environment there will be no difference
+process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 module.exports = {
   entry: [
@@ -14,6 +17,12 @@ module.exports = {
     new webpack.ProvidePlugin({
       '$': 'jquery',
       'jQuery': 'jquery'
+    }),
+    // disabled warning when doing NODE_ENV=production webpack -p
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false
+      }
     })
   ],
   output: {
@@ -54,5 +63,6 @@ module.exports = {
       path.resolve(__dirname, './node_modules/foundation-sites/scss')
     ]
   },
-  devtool: 'cheap-module-eval-source-map'
+  // use the most space in bundle file
+  devtool: process.env.NODE_ENV === 'production'? undefined : 'cheap-module-eval-source-map' // we only generating the source map if the webpack is not in production
 };
