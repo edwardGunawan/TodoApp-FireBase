@@ -23,7 +23,7 @@ firebase.auth().onAuthStateChanged((user)=>{ // will get called everytime state 
     store.dispatch(actions.startAddTodos()); //use async fetches data from firebase, and then it will call add todo which will updtae the redux store and rerender the app, only grab the startAddTodos on the todo that is mentioned in uuid
     hashHistory.push('/todos'); // update the url if user exist, it is the history that we chosen in our router, redirected after user is login
   } else {
-    store.dispatch(actions.logout());
+    store.dispatch(actions.logout()); // it calls here when it is logged out
     // push them back to the login, or the root directory, if someone log out
     hashHistory.push('/');
   }
