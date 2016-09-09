@@ -4,10 +4,12 @@ var {Provider} = require('react-redux');
 var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
 
-var TodoApp = require('TodoApp');
+
+import TodoApp from 'TodoApp';
 var actions = require('actions');
 var store = require('configureStore').configure();
 var TodoAPI = require('TodoAPI');
+import Login from 'Login'; // if using export default, import, if require won't work
 
 
 store.dispatch(actions.startAddTodos()); //use async fetches data from firebase, and then it will call add todo which will updtae the redux store and rerender the app
@@ -23,7 +25,12 @@ require('style!css!sass!applicationStyles')
 /* todoapp component and its children can access the data on the store and dispatch action */
 ReactDOM.render(
   <Provider store = {store}>
-    <TodoApp />
+    <Router history={hashHistory}>
+      <Route path="/">
+        <Route path="todo" component={TodoApp}/>
+        <IndexRoute component={Login}/>
+      </Route>
+    </Router>
   </Provider>,
   document.getElementById('app')
 );

@@ -11,6 +11,6 @@ import firebase from 'firebase';
 
   }
 
+  export var githubProvider = new firebase.auth.GithubAuthProvider(); //to use in actions file to authenticate with github, so when user click it will pop up github and authenticate it with the github account
   export var firebaseRef = firebase.database().ref();
-
   export default firebase; // clean up any file that import this file, so they only need to import the firebase config instead of importing the firebase module on top

@@ -1,4 +1,4 @@
-import firebase, {firebaseRef} from 'app/firebase/';
+import firebase, {firebaseRef, githubProvider} from 'app/firebase/';
 import moment from 'moment';
 
 export var setSearchText = (searchText) => {
@@ -95,3 +95,26 @@ export var startAddTodos = () => {
       });
     };
   }
+
+/* log in */
+  export var startLogin = () => {
+    return (dispatch, getState) => {
+      // start the login async actions .auth() return authentication related function, to authenticate to the github, so that the app can be used as a login , it is like when you want ot login as facebook, and facebook authenticate it(signintWithPopup)
+      return firebase.auth().signInWithPopup(githubProvider).then((result) => {
+        console.log('Auth Worked!', result);
+      }, (error)=> {
+        console.log('Unable to Auth!', error);
+      })
+    };
+  };
+
+  /* log out */
+  export var startLogout = () => {
+    return (dispatch, getState) => {
+      // when sign out, it will give something to return to the screen, like success log out or something
+      return firebase.auth().signOut().then(() => {
+        console.log('Logged out!');
+      });
+
+    };
+  };
