@@ -3,4 +3,3 @@ concept
 playground/
 // don't have bundle.js in git
 public/bundle.js
-config/
