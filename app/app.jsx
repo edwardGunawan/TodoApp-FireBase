@@ -12,11 +12,16 @@ import Login from 'Login'; // if using export default, import, if require won't 
 import firebase from 'app/firebase/';
 import router from 'app/router/';
 
+
+
+
 // redirect on login and logout, call to the firebase method, and get a call back if status changes
 firebase.auth().onAuthStateChanged((user)=>{ // will get called everytime state changed, will get called with the user argument, if user argument present someone log in, else someone log out
   if(user){
+    store.dispatch(actions.login(user.uid));
     hashHistory.push('/todos'); // update the url if user exist, it is the history that we chosen in our router, redirected after user is login
   } else {
+    store.dispatch(actions.logout());
     // push them back to the login, or the root directory, if someone log out
     hashHistory.push('/');
   }
