@@ -19,6 +19,8 @@ import router from 'app/router/';
 firebase.auth().onAuthStateChanged((user)=>{ // will get called everytime state changed, will get called with the user argument, if user argument present someone log in, else someone log out
   if(user){
     store.dispatch(actions.login(user.uid));
+    // before startAddTodos is called outside, before the user login, the the redux dev tools are able to see the todos that is stored in the array, because it is get called over here if user login
+    store.dispatch(actions.startAddTodos()); //use async fetches data from firebase, and then it will call add todo which will updtae the redux store and rerender the app, only grab the startAddTodos on the todo that is mentioned in uuid
     hashHistory.push('/todos'); // update the url if user exist, it is the history that we chosen in our router, redirected after user is login
   } else {
     store.dispatch(actions.logout());
@@ -28,7 +30,6 @@ firebase.auth().onAuthStateChanged((user)=>{ // will get called everytime state 
 });
 
 
-store.dispatch(actions.startAddTodos()); //use async fetches data from firebase, and then it will call add todo which will updtae the redux store and rerender the app
 
 // Load foundation
 // after includePaths in webpack config for telling the sass loader to include the file, we don't need to have it

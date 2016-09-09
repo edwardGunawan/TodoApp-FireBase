@@ -25,7 +25,8 @@ export var startAddTodo = (text) => {
       completedAt: null // to remove data from firebase need to do null
     };
 
-    var todoRef = firebaseRef.child('todos').push(todo);
+    var uid = getState().auth.uid;
+    var todoRef = firebaseRef.child(`users/${uid}/todos`).push(todo);
 
     return todoRef.then(() => { // promise, so when todoRef is done, it will dispatch which update the store, and it will rerender our component adding our new todo to the browser
       dispatch(addTodo({
@@ -47,7 +48,8 @@ export var addTodos = (todos) => {
 /* fetch the data from firebase */
 export var startAddTodos = () => {
   return (dispatch, getState) => {
-    var todosRef = firebaseRef.child('todos');
+    var uid = getState().auth.uid;
+    var todosRef = firebaseRef.child(`users/${uid}/todos`); // access the user ref then grab individual user ref which is unique in the variable, then it will work in the new location
 
     return todosRef.once('value').then((snapshot) => {
       // console.log('snapshot.val()' , snapshot.val()); // val() return the whole object representation of that data reference to, the key will be the key of that whole data array since it is referencing to the todos, it will be todos
@@ -82,7 +84,8 @@ export var startAddTodos = () => {
 /* when toogle need to save it in the firebase */
   export var startToggleTodo= (id, completed) => {
     return (dispatch, getState) => {
-      var todoRef = firebaseRef.child(`todos/${id}`); // equal 'todos/' + id
+      var uid = getState().auth.uid; // get state from the config store, and get the auth props inside reducers and the uid
+      var todoRef = firebaseRef.child(`users/${uid}/todos/${id}`); // equal 'todos/' + id
 
       /* set completedAt, if completed is true, we want to set completedAt, but if it is false, we want to delete it */
       var updates = {
