@@ -1,8 +1,16 @@
 var webpack = require('webpack');
 var path= require('path');
+var envFile = require('node-env-file');
 // webpack NODE_ENV=production webpack -p to do more optimization
 // webpack config is exactly the same no matter what environment you running at, if you run in heroku, or the test environment there will be no difference
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
+
+// node-env-file will throw error on file if it doesn't exist, thats exactly what is going to happpen in the production, there is no production file in the config folder, there is no config folder in production
+try { // load in the file
+  envFile(path.join(__dirname, 'config/'+process.env.NODE_ENV + '.env')); // environment name as the file name (NODE_ENV), it is going to have envFile to load our file, set all appropriate var in process.env
+} catch(e){
+
+}
 
 module.exports = {
   entry: [
@@ -22,6 +30,16 @@ module.exports = {
     new webpack.optimize.UglifyJsPlugin({
       compressor: {
         warnings: false
+      }
+    }),
+    // define plugins let you define var in bundle using webpack config file
+    new webpack.DefinePlugin({
+      'process.env': { // we can pass in all the argument that we like for the environment so that we can get the variable inside the env file
+        NODE_ENV: JSON.stringify (process.env.NODE_ENV), // wrap all the string for us so they work appropriately // value evalutate as js, it set it up to the variable test equal to when setting the plugins, when defined a stirng it should be '"test"'
+        API_KEY: JSON.stringify (process.env.API_KEY),
+        AUTH_DOMAIN: JSON.stringify (process.env.AUTH_DOMAIN),
+        DATABASE_URL: JSON.stringify (process.env.DATABASE_URL),
+        STORAGE_BUCKET: JSON.stringify (process.env.STORAGE_BUCKET)
       }
     })
   ],
