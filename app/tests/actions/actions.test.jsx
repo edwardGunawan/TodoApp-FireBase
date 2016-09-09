@@ -39,23 +39,6 @@ describe('Actions', () => {
     expect(res).toEqual(action);
   });
 
-  it('should create todo and DISPATCH_ADDTODO', (done) => {
-    const store = createMockStore({}); // empty store
-    const todoText = 'my todo item';
-
-    /* once the action is complete then the action will show up inside the mockStory,
-    if it does than the property looks great and we call done () */
-    store.dispatch(actions.startAddTodo(todoText)).then(() => {
-      const actions = store.getActions(); // return an array of all actions that is on our mock store, in this case it is only 1 action
-      expect(actions[0]).toInclude({
-        type: 'ADD_TODO' // this is not going to fail if it doesn't match up perfectly as long as there is this type
-      }); // same as toEqual
-      expect(actions[0].todo).toInclude({ // in the property of actions[0] in todo props
-        text: todoText
-      });
-      done();
-    }).catch(done); // call it to the firebase
-  });
 
   it('should generate add todos action object', () => {
 
@@ -122,14 +105,24 @@ describe('Actions', () => {
    expect(res).toEqual(action);
  });
 
+
  describe('Tests with firebase todos', () => {
    var testTodoRef;
+   var uid;
+   var todosRef;
 
    /* beforeEach is available inside mocha, it lets us defined the code to run before every test, we can use this code to set up test suite, means we be adding some data to firebase, it can take done function when its done because async code */
    beforeEach((done)=>{
-     var todosRef = firebaseRef.child('todos');
-     todosRef.remove().then(()=>{
-       testTodoRef = firebaseRef.child('todos').push();
+     var credential = firebase.auth.GithubAuthProvider.credential(process.env.GITHUB_ACCESS_TOKEN); // to set if user log in
+
+     /* actually authenticate */
+     // sign in user credential, so we have a sign in user
+     firebase.auth().signInWithCredential(credential).then((user) => {
+       uid = user.uid;
+       todosRef = firebaseRef.child(`users/${uid}/todos`);
+       return todosRef.remove(); // call todoRef.remove after it is to chain the reaction
+     }).then(()=>{
+       testTodoRef = todosRef.push(); // to store the todos in the appropriate location
        return testTodoRef.set({
          text:'Something to do',
          completed: false,
@@ -141,11 +134,11 @@ describe('Actions', () => {
 
    /* after the test, all item will ve removed */
    afterEach((done)=>{
-     testTodoRef.remove().then(()=>done()); // to remove every item in database, so that it doesn't get overwhelm
+     todosRef.remove().then(()=>done()); // to remove every item in database, so that it doesn't get overwhelm
    });
 
    it('should toggle todo and dispatch UPDATE_TODO action', (done) =>{
-     const store = createMockStore({});
+     const store = createMockStore({auth:{uid:uid}}); // id to be accessable inside of our object, it has the authentication object with that uuid field
      const action = actions.startToggleTodo(testTodoRef.key, true); // get the value of startToggleTodo
 
      store.dispatch(action).then(()=>{
@@ -167,7 +160,7 @@ describe('Actions', () => {
    });
 
    it('should populate todos and dispatch ADD_TODOS' , (done) => {
-     const store = createMockStore({});
+     const store = createMockStore({auth:{uid}});
      const action = actions.startAddTodos();
 
        store.dispatch(action).then(()=>{ // going to firebase and fetching todos
@@ -179,6 +172,24 @@ describe('Actions', () => {
          expect(mockActions[0].todos[0].text).toEqual('Something to do')
          done();
        },done);
+   });
+
+   it('should create todo and DISPATCH_ADDTODO', (done) => {
+     const store = createMockStore({auth:{uid}}); // empty store
+     const todoText = 'my todo item';
+
+     /* once the action is complete then the action will show up inside the mockStory,
+     if it does than the property looks great and we call done () */
+     store.dispatch(actions.startAddTodo(todoText)).then(() => {
+       const actions = store.getActions(); // return an array of all actions that is on our mock store, in this case it is only 1 action
+       expect(actions[0]).toInclude({
+         type: 'ADD_TODO' // this is not going to fail if it doesn't match up perfectly as long as there is this type
+       }); // same as toEqual
+       expect(actions[0].todo).toInclude({ // in the property of actions[0] in todo props
+         text: todoText
+       });
+       done();
+     }).catch(done); // call it to the firebase
    });
  });
 
