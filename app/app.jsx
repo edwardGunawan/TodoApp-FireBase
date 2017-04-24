@@ -33,7 +33,7 @@ firebase.auth().onAuthStateChanged((user)=>{ // will get called everytime state 
 
 // Load foundation
 // after includePaths in webpack config for telling the sass loader to include the file, we don't need to have it
-// require('style!css!foundation-sites/dist/foundation.min.css') // we load in the css version of foundation, from this we overrider the style that we want to change
+// require('style!css!foundation-sites/dist/css/foundation.min.css') // we load in the css version of foundation, from this we overrider the style that we want to change
 $(document).foundation();
 
 // App css
