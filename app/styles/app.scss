@@ -3,7 +3,7 @@
 // we can leave off the extention and the _ when importing
 
 //foundation
-@import 'base/foundation-settings';
+@import 'base/settings';
 @import 'base/variables';
 @import 'foundation';
 @include foundation-everything;
