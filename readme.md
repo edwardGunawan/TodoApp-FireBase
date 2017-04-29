@@ -1,3 +1,5 @@
-# TrackMe
+# Simple Version of ReactToDo 
 
-Deployed App: http://trackme-gunawan.herokuapp.com/#/?_k=i05q8p
+* Not Firebase at all
+* No Redux
+
